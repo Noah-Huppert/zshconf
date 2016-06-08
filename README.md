@@ -1,6 +1,9 @@
 # zshconf
 A barebones zsh configuration tool
 
+# Installation
+To install zshconf clone this repository into `$HOME/.config/zshconf` and source the `zshconf.zsh` file in your `.zshrc`.
+
 # zshconf file
 By default zshconf looks for a `zshconf` file in `$HOME/.config/zshconf/zshconf`. Set the `ZSHCONF_FILE` and `ZSHCONF_DIR` environment variables to customize this location.  
 

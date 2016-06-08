@@ -9,26 +9,28 @@ LOG_INFO=1
 LOG_BLANK_TAG="       "
 
 function llog() {
-	case $1 in
-		$LOG_ERROR)
-			log_prefix="[ERROR]"
-			log_color=1
-			;;
-		$LOG_INFO)
-			log_prefix="[INFO ]"
-			log_color=4
-			;;
-		*)
-			log_prefix="[MISC ]"
-			log_color=5
-			;;
-	esac
+	if [[ ! -z $ZSHCONF_QUIET ]]; then
+		case $1 in
+			$LOG_ERROR)
+				log_prefix="[ERROR]"
+				log_color=1
+				;;
+			$LOG_INFO)
+				log_prefix="[INFO ]"
+				log_color=4
+				;;
+			*)
+				log_prefix="[MISC ]"
+				log_color=5
+				;;
+		esac
 
-	tput setaf $log_color
+		tput setaf $log_color
 
-	echo "$log_prefix $2"
+		echo "$log_prefix $2"
 
-	tput sgr0
+		tput sgr0
+	fi
 }
 
 # Check if zshconf file exists

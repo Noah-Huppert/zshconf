@@ -1,3 +1,3 @@
 .PHONY: run
 run:
-	zsh zshconf.zsh
+	source zshconf.zsh

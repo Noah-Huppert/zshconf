@@ -62,7 +62,7 @@ if ! type git > /dev/null; then
 fi
 
 # Update zshconf
-if check_status "self_update" $ZSHCONF_SELF_UPDATE_INTERVAL ; then
+if check_interval "self_update" $ZSHCONF_SELF_UPDATE_INTERVAL ; then
 	llog $LOG_INFO "Updating zshconf (self)"
 
 	o=`git -C "$ZSHCONF_DIR" fetch --all 2>&1` || llog $LOG_ERROR $o

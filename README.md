@@ -1,3 +1,4 @@
+Project Status: Complete | Maintaining
 # zshconf
 A barebones zsh configuration tool
 

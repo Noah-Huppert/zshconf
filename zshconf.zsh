@@ -1,8 +1,8 @@
 ZSHCONF_DIR=${ZSHCONF_DIR:=$HOME/.config/zshconf}
 ZSHCONF_REPO_DIR=${ZSHCONF_REPO_DIR:=$ZSHCONF_DIR/repositories}
 ZSHCONF_FILE=${ZSHCONF_FILE:=$ZSHCONF_DIR/zshconf}
-ZSHCONF_UPDATE_INTERVAL=${ZSHCONF_UPDATE_INTERVAL:=86400} # Default is 1 day
-ZSHCONF_LASTUP_FILE="$ZSHCONF_DIR/last_update_time"
+ZSHCONF_REPO_UPDATE_INTERVAL=${ZSHCONF_REPO_UPDATE_INTERVAL:=86400} # Default is 1 day
+ZSHCONF_SELF_UPDATE_INTERVAL=${ZSHCONF_SELF_UPDATE_INTERVAL:=86400} # Default is 1 day
 
 LOG_ERROR=0
 LOG_INFO=1
@@ -31,6 +31,45 @@ function llog() {
 	tput sgr0
 }
 
+function check_interval() { # (identifier, interval)
+	interval_id=$1
+	interval_timeout=$2
+
+	interval_file="$ZSHCONF_DIR/intervals/$interval_id"
+
+	current_time=$(date +%s)
+
+	if [[ -a $interval_file ]]; then
+		last_interval_time=$(cat $interval_file)
+	else
+		last_interval_time=0
+		mkdir -p "$ZSHCONF_DIR/intervals"
+		touch $interval_file
+		echo $last_interval_time > $interval_file
+	fi
+
+	if (( $current_time - $last_interval_time >= $interval_timeout )); then
+		echo $current_time > $interval_file
+		true
+	else
+		false 
+	fi
+}
+
+if ! type git > /dev/null; then
+	llog $LOG_ERROR "Git not installed: Exiting"
+	exit 1
+fi
+
+# Update zshconf
+if check_interval "self_update" $ZSHCONF_SELF_UPDATE_INTERVAL ; then
+	llog $LOG_INFO "Updating zshconf (self)"
+
+	o=`git -C "$ZSHCONF_DIR" fetch --all 2>&1` || llog $LOG_ERROR $o
+	o=`git -C "$ZSHCONF_DIR" reset --hard origin/master 2>&1` || llog $LOG_ERROR $o
+fi
+
+
 # Check if zshconf file exists
 if [[ -a $ZSHCONF_FILE ]]; then
 	# Loop through zshconf file by line
@@ -47,22 +86,11 @@ if [[ -a $ZSHCONF_FILE ]]; then
 
 				# Update if git repo exists, clone if doesn't
 				if [[ -d "$ZSHCONF_REPO_DIR/$repo_dir" ]]; then
-					# Check for last update time
-					current_time=$(date +%s)
-					if [[ -a $ZSHCONF_LASTUP_FILE ]]; then
-						last_update_time=$(cat $ZSHCONF_LASTUP_FILE)
-					else
-						last_update_time=0
-						echo $last_update_time > $ZSHCONF_LASTUP_FILE
-					fi
-
 					# Check if time elapsed is greater than update interval
-					if (( $current_time - $last_update_time >= $ZSHCONF_UPDATE_INTERVAL )); then
+					if check_interval "repo_${repo_dir}_update" $ZSHCONF_REPO_UPDATE_INTERVAL ; then
 						llog $LOG_INFO "    Updating"
-						o=`git -C "$ZSHCONF_REPO_DIR/$repo_dir" fetch --all 2>&1` || echo $o
-						o=`git -C "$ZSHCONF_REPO_DIR/$repo_dir" reset --hard origin/master 2>&1` || echo $o
-
-						echo $current_time > $ZSHCONF_LASTUP_FILE
+						o=`git -C "$ZSHCONF_REPO_DIR/$repo_dir" fetch --all 2>&1` || llog $LOG_ERROR $o
+						o=`git -C "$ZSHCONF_REPO_DIR/$repo_dir" reset --hard origin/master 2>&1` || llog $LOG_ERROR $o
 					fi
 				else
 					git clone $line "$ZSHCONF_REPO_DIR/$repo_dir"
@@ -82,9 +110,4 @@ if [[ -a $ZSHCONF_FILE ]]; then
 	done <$ZSHCONF_FILE
 else
 	llog $LOG_ERROR "No zshconf file found (Expected: $ZSHCONF_FILE)"
-fi
-
-if ! type git > /dev/null; then
-	llog $LOG_ERROR "Git not installed: Exiting"
-	exit 1
 fi

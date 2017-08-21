@@ -30,7 +30,7 @@ It will clone down any Git repository and source each file listed.
 Zshconf reads certain environment variables for settings.
 
 - ZSHCONF_DIR (string): Absolute path to directory zshconf uses for all general work
-- ZSHCONF_REPO_DIR (string): Absolute path directory zshconf uses to save external Git repositories listed in `zshconf` file
+- ZSHCONF_REPO_DIR (string): Absolute path to directory zshconf uses to save external Git repositories listed in `zshconf` file
 - ZSHCONF_FILE (string): Abolute path to `zshconf` file
 - ZSHCONF_REPO_UPDATE_INTERVAL (integer, seconds): How often zshconf checks for updates to external repositories listed in `zshconf`
 - ZSHCONF_SELF_UPDATE_INTERVAL (integer, seconds): How often zshconf checks for updates to itself

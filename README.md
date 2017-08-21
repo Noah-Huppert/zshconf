@@ -18,3 +18,5 @@ The `zshconf` file follows the scheme:
 	<file>
 ... repeat ...
 ```
+
+It will clone down any Git repository and source each file listed.

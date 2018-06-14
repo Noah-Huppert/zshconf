@@ -37,8 +37,7 @@ Zshconf determines which files to source by reading a `zshconf` file.
 By default Zshconf looks for a `zshconf` file in 
 `$HOME/.config/zshconf/zshconf`.  
 
-Set the `ZSHCONF_FILE` and `ZSHCONF_DIR` environment variables to customize 
-the location.  
+Set the `ZSHCONF_FILE` environment variable to customize this location.  
 
 The `zshconf` file follows the format:
 
@@ -55,7 +54,7 @@ It will clone down the listed Git repository and source the files listed for
 that Git repository.
 
 ## Example Zshconf File
-This example `zshconf` file loads a theme from the 
+This example `zshconf` file loads the "Sorin" theme from the 
 [Oh My Zsh](https://github.com/robbyrussell/oh-my-zsh.git) repository:
 
 ```
@@ -68,10 +67,16 @@ https://github.com/robbyrussell/oh-my-zsh.git
 	themes/sorin.zsh-theme	
 ```
 
-This will only load the files necessary to use the "Sorin" Zsh theme.  
+This will only load the files necessary to use the "Sorin" Zsh theme:
+
+- `lib/git.zsh`
+- `lib/theme-and-appearance.zsh`
+- `themes/sorin.zsh-theme`
+
+from the [Oh My Zsh](https://github.com/robbyrussell/oh-my-zsh.git) repository.  
 
 All the other unwanted files in the Oh My Zsh repository will not be included 
-in you Zsh profile.
+in you Zsh profile.  
 
 ## Configuration
 Zshconf can be configured with the following environment variables:

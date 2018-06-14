@@ -1,19 +1,46 @@
 Project Status: Complete | Maintaining
+
 # zshconf
-A barebones zsh configuration tool
+A barebones Zsh plugin loader tool.
+
+# Table Of Contents
+- [Overview](#overview)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Updating](#updating)
+
+# Overview
+Zshconf is a lightweight plugin loader utility. It allows you to source 
+individual Zsh files from Git repositories.  
+
+This gives you the ability to incorporate features other's have made into your 
+own Zsh profile.
 
 # Installation
-To install zshconf clone this repository into `$HOME/.config/zshconf` and source the `zshconf.zsh` file in your `.zshrc`.
+To install Zshconf clone this repository into `$HOME/.config/zshconf`:
 
-# Configuration
-Zshconf looks for a `zshconf` file. When the `zshconf.zsh` file is sourced in your `.zshrc` it will load all the files specified in this `zshconf` file.
+```
+git clone git@github.com:Noah-Huppert/zshconf.git ~/.config/zshconf
+```
 
-Giving you the plugin functionality of many alternatives, but with only a ~120 line zsh file. 
+Then source the `zshconf.zsh` file in your Zsh profile:  
 
-## zshconf file
-By default zshconf looks for a `zshconf` file in `$HOME/.config/zshconf/zshconf`. Set the `ZSHCONF_FILE` and `ZSHCONF_DIR` environment variables to customize this location.  
+```
+# ~/.zshrc
+source $HOME/.config/zshconf/zshconf.zsh
+```
 
-The `zshconf` file follows the scheme:
+# Usage
+Zshconf determines which files to source by reading a `zshconf` file.
+
+By default Zshconf looks for a `zshconf` file in 
+`$HOME/.config/zshconf/zshconf`.  
+
+Set the `ZSHCONF_FILE` and `ZSHCONF_DIR` environment variables to customize 
+the location.  
+
+The `zshconf` file follows the format:
 
 ```
 <Git Repository URI>
@@ -24,16 +51,43 @@ The `zshconf` file follows the scheme:
 ... repeat ...
 ```
 
-It will clone down any Git repository and source each file listed.
+It will clone down the listed Git repository and source the files listed for 
+that Git repository.
 
-## Other paramteres
-Zshconf reads certain environment variables for settings.
+## Example Zshconf File
+This example `zshconf` file loads a theme from the 
+[Oh My Zsh](https://github.com/robbyrussell/oh-my-zsh.git) repository:
 
-- ZSHCONF_DIR (string): Absolute path to directory zshconf uses for all general work
-- ZSHCONF_REPO_DIR (string): Absolute path to directory zshconf uses to save external Git repositories listed in `zshconf` file
-- ZSHCONF_FILE (string): Abolute path to `zshconf` file
-- ZSHCONF_REPO_UPDATE_INTERVAL (integer, seconds): How often zshconf checks for updates to external repositories listed in `zshconf`
-- ZSHCONF_SELF_UPDATE_INTERVAL (integer, seconds): How often zshconf checks for updates to itself
+```
+# oh my zsh
+https://github.com/robbyrussell/oh-my-zsh.git
+	# lib
+	lib/git.zsh
+	lib/theme-and-appearance.zsh
+	# Theme
+	themes/sorin.zsh-theme	
+```
+
+This will only load the files necessary to use the "Sorin" Zsh theme.  
+
+All the other unwanted files in the Oh My Zsh repository will not be included 
+in you Zsh profile.
+
+## Configuration
+Zshconf can be configured with the following environment variables:
+
+- `ZSHCONF_DIR` (string): Absolute path to directory Zshconf uses for all 
+                          general work
+- `ZSHCONF_REPO_DIR` (string): Absolute path to directory Zshconf uses to save 
+                               external Git repositories listed in the 
+			       `zshconf` file
+- `ZSHCONF_FILE` (string): Absolute path to `zshconf` file
+- `ZSHCONF_REPO_UPDATE_INTERVAL` (integer, seconds): How often Zshconf checks 
+                                                     for updates to external 
+						     repositories listed in 
+						     the `zshconf`
+- `ZSHCONF_SELF_UPDATE_INTERVAL` (integer, seconds): How often Zshconf checks 
+                                                     for updates to itself
 
 # Updating
 Zshconf checks for updates every day. It pulls down updates using Git. 

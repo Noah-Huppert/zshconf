@@ -1,6 +1,6 @@
 Project Status: Complete | Maintaining
 
-# zshconf
+# Zshconf
 A barebones Zsh plugin loader tool.
 
 # Table Of Contents

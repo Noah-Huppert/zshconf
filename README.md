@@ -42,11 +42,14 @@ Set the `ZSHCONF_FILE` environment variable to customize this location.
 The `zshconf` file follows the format:
 
 ```
-<Git Repository URI>
-	<file>
-	<file>
-	<file>
-	<file>
+<Git Repository URL 1>
+	<file to source 1>
+	<file to source 2>
+	<file to source 3>
+<Git Repository URL 2>
+	<file to source 1>
+	<file to source 2>
+	<file to source 3>
 ... repeat ...
 ```
 
